@@ -4,7 +4,8 @@ import Image from "next/image";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
-
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     async function load() {
       try {
@@ -13,15 +14,38 @@ export default function Home() {
         setProducts(data);
       } catch (err) {
         console.error("Error fetching products:", err);
-      }                 
+      }
     }
     load();
   }, []);
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-semibold mb-6 text-center">Products</h1>
+const handleSearch = async () => {
+  try {
+    setLoading(true);
+    const res = await fetch("/api/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query }),
+    });
 
+    const data = await res.json();
+    setProducts(data);
+  } catch (err) {
+    console.log("Search error:", err);
+  }finally{
+    setLoading(false);
+  }
+};
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-6 ">
+      <h1 className="text-3xl font-semibold mb-6 text-center">Products</h1>
+      <div className="flex justify-center items-center gap-3 mb-6">
+        <input onChange={(e) => setQuery(e.target.value)} type="text" value={query} placeholder="Search products..." className="w-full max-w-md rounded-lg border border-slate-400 bg-white p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-300" />
+        <button onClick={handleSearch} className="rounded-lg bg-gray-500 px-4 py-2 text-white shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 cursor-pointer " disabled={loading} >{loading ? "Searching...":"Search"}</button>
+      </div>
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products && products.length > 0 ? (

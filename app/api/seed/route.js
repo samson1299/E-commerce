@@ -11,7 +11,7 @@ export async function GET() {
       description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, eaque.",
       image: "https://picsum.photos/400/300",
       price: 19.99,
-      category: "clothing"
+      category: "clothing",
     },
     {
       title: "black shirt",
