@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import AddToCartButton from "@/app/components/AddToCartButton";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -71,6 +72,7 @@ const handleSearch = async () => {
                     <span className="text-indigo-600 font-semibold">${p.price}</span>
                     <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{p.category}</span>
                   </div>
+                  <AddToCartButton product={p} />
                 </div>
               </div>
             ))
