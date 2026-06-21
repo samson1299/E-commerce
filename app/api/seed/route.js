@@ -1,10 +1,20 @@
 import connectDB from "@/lib/db";
 import Products from "@/app/models/Products";
+import OpenAI from "openai";
+const openai = new OpenAI({apiKey:process.env.OPENAI_KEY});
+
+async function genrateVector(text) {
+  const response  = await openai.embeddings.create({
+    model: "text - embedding-3-small",
+    input:text,
+  });
+  return response.data[0].embedding;
+}
+
 export async function GET() {
   await connectDB();
-  const products = await Products.find();
   await Products.deleteMany();
-  const seedProducts = [
+  const products = [
     {
       title: "Blue T-shirt",
       description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, eaque.",
@@ -451,8 +461,11 @@ export async function GET() {
   category: "outdoor"
 }
   ];
-
-  const productsWithRandomImage = seedProducts.map((p) => ({
+  const productsWithVectors = await Promise.all(product.map(async(product) =>{
+    const embedding = await genrateVector(`${product.description} ${product.catagory} ${product.title}`);
+    return {...product,embedding}; 
+  })) 
+  const productsWithRandomImage = products.map((p) => ({
     ...p,
     image: `${p.image}?random=${Math.floor(Math.random() * 1e9)}`,
   }));
