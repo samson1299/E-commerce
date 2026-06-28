@@ -16,12 +16,7 @@ export async function GET() {
   await Products.deleteMany();
   const products = [
     {
-      title: "Blue T-shirt",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, eaque.",
-      image: "https://picsum.photos/400/300",
-      price: 19.99,
-      category: "clothing",
-    },
+
     {
       title: "black shirt",
       description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, eaque.",
